@@ -1,0 +1,23 @@
+# Example cloudflared config for Ced's HomeLab
+# DO NOT PUT REAL CREDENTIALS HERE
+
+tunnel: YOUR-TUNNEL-ID-HERE
+credentials-file: /root/.cloudflared/YOUR-TUNNEL-ID-HERE.json
+
+ingress:
+  - hostname: dashy.cedshomelab.com
+    service: http://10.10.30.210:4000
+
+  - hostname: pve.cedshomelab.com
+    service: https://10.10.30.250:8006
+
+  - hostname: truenas.cedshomelab.com
+    service: https://10.10.30.143:443
+
+  - hostname: ha.cedshomelab.com
+    service: http://10.10.30.104:8123
+
+  - hostname: "*.cedshomelab.com"
+    service: http://10.10.30.210:80
+
+  - service: http_status:404

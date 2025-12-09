@@ -1,0 +1,33 @@
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Node / Python / etc (future-proofing)
+node_modules/
+venv/
+.env
+
+# Secrets (DO NOT COMMIT!)
+*.pem
+*.key
+*.crt
+*.pfx
+*.json
+secrets.yaml
+secret.yaml
+*.kubeconfig
+
+# Home Assistant internal data
+home-assistant/.storage/
+home-assistant/.cloud/
+
+# Terraform / Ansible (if you add later)
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# IDE
+.vscode/
+.idea/
