@@ -31,3 +31,12 @@
   - `chasedumphord.com` or
   - `cedshome.com`
 - More detailed, automated documentation
+
+## Monitoring To-Do
+
+- [ ] Add Prometheus exporters:
+  - [ ] Proxmox exporter
+  - [ ] TrueNAS / ZFS exporter
+  - [ ] SMART / disk health exporter
+  - [ ] Uptime Kuma → Prometheus
+  - [ ] Cloudflare / tunnel metrics (if possible)
