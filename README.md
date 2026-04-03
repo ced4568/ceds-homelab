@@ -52,7 +52,7 @@ This lab is designed to:
 ## 📸 Key System Views
 
 ### 🖥️ Proxmox Infrastructure
-![Proxmox](screenshots/proxmox.png)
+![Proxmox](screenshots/proxmox-overview.png)
 
 ### ☸️ K3s Cluster Nodes
 ![K3s Nodes](screenshots/k3s-cluster.png)
