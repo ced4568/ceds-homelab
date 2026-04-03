@@ -57,7 +57,7 @@ This lab is designed to:
 ### 🖥️ Proxmox Infrastructure
 ![Proxmox](screenshots/proxmox-overview2.png)
 
-### ☸️ K3s Cluster Nodes
+### ☸️ K3s Cluster Nodes & Pods
 ![K3s Nodes](screenshots/K3s-nodes.png)
 
 ### 🌐 Reverse Proxy (Nginx Proxy Manager)
