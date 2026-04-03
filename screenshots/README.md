@@ -1,10 +1,17 @@
 
-# Screenshots
+## 📸 Key System Views
 
-This folder contains screenshots of the Ced’s HomeLab environment.
+### 🖥️ Proxmox Infrastructure
+![Proxmox](screenshots/proxmox-overview.png)
 
-Planned:
-- Proxmox overview
-- K3s cluster nodes
-- Dashy homepage
-- Monitoring dashboards
+### ☸️ K3s Cluster Nodes
+![K3s Nodes](screenshots/k3s-nodes.png)
+
+### ☸️ K3s Workloads
+![K3s Pods](screenshots/k3s-pods.png)
+
+### 🌐 Service Dashboard
+![Dashy](screenshots/dashy-home.png)
+
+### 📊 Service Monitoring
+![Uptime Kuma](screenshots/uptime-kuma.png)
