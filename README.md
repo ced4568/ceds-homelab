@@ -1,6 +1,6 @@
 # 🧠 Ced’s HomeLab (Enterprise Infrastructure & Monitoring Lab)
 
-A production-style homelab designed to simulate real-world infrastructure, system monitoring, and service delivery.
+> A production-style infrastructure lab showcasing real-world systems engineering, monitoring, and platform operations.
 
 This environment functions as a **personal datacenter**, combining virtualization, Kubernetes orchestration, observability, and secure external access.
 
