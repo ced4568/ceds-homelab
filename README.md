@@ -166,7 +166,7 @@ Current and planned monitoring coverage includes:
 - Advanced monitoring + alerting
 - Portfolio site:
   - chasedumphord.com  
-  - cedshome.com  
+  - cedshomelab.com  
 
 ---
 
