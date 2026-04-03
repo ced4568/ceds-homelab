@@ -15,6 +15,11 @@ This environment functions as a **personal datacenter**, combining virtualizatio
 - Secure service exposure (Cloudflare Tunnels + reverse proxy)
 - Real-world system integration (data, services, automation)
 
+## 🔥 Featured Project: SOC Lab
+
+A focused project within this homelab that demonstrates monitoring, logging, and security concepts.
+
+👉 [View SOC Lab Project](soc-lab/README.md)
 ---
 
 ## 🏗️ Architecture Overview
@@ -54,7 +59,7 @@ This lab is designed to:
 ### 🖥️ Proxmox Infrastructure
 ![Proxmox](screenshots/proxmox-overview.png)
 
-### 🖥️ Proxmox Infrastructure
+### 🖥️ Proxmox Workloads
 ![Proxmox](screenshots/proxmox-overview2.png)
 
 ### ☸️ K3s Cluster Nodes & Pods
