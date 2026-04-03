@@ -61,7 +61,7 @@ This lab is designed to:
 ![K3s Nodes](screenshots/K3s-nodes.png)
 
 ### 🌐 Reverse Proxy (Nginx Proxy Manager)
-![Nginx](screenshots/nginx.png)
+![Nginx](screenshots/NGN.png)
 
 ### 📊 Service Monitoring (Uptime Kuma)
 ![Uptime Kuma](screenshots/uptime-kuma.png)
