@@ -70,6 +70,10 @@ This lab is designed to:
 
 ### 📊 Service Monitoring (Uptime Kuma)
 ![Uptime Kuma](screenshots/uptime-kuma.png)
+
+### 📊 Grafana Dashboard
+![Grafana](screenshots/grafana.png)
+
 ---
 
 ## 🌐 Network & VLANs
