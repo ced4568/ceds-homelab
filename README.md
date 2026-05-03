@@ -74,6 +74,9 @@ This lab is designed to:
 ### 📊 Grafana Dashboard
 ![Grafana](screenshots/grafana.png)
 
+### 📊 Grafana Dashboard
+![Grafana](screenshots/grafana2.png)
+
 ---
 
 ## 🌐 Network & VLANs
