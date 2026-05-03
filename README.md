@@ -107,6 +107,77 @@ Notes and dashboards: [`monitoring/`](monitoring/)
 
 ---
 
+## 📊 Live NOC & Automation Pipeline
+
+The homelab powers a public-facing live NOC dashboard at **noc.chasedumphord.com**.
+
+An automated Python script runs on Biggie (Proxmox node 10.10.30.192) every 5 minutes via cron. It pings all 28 systems, records latency and online/offline status, writes a structured JSON file, and pushes it to GitHub. The dashboard updates automatically.
+
+```text
+Biggie (10.10.30.192) — cron: */5 * * * *
+  → noc_update.py
+    → ICMP ping 28 systems
+    → record latency + status
+    → write data/noc-status.json
+    → git commit + push to ced-portfolio
+      → GitHub Pages deploys (~30s)
+        → noc.chasedumphord.com auto-refreshes
+```
+
+- Script: `~/scripts/noc_update.py` on Biggie
+- Log: `/var/log/noc_update.log`
+- NOC source: https://github.com/ced4568/ceds-noc
+- Live dashboard: https://noc.chasedumphord.com
+
+---
+
+## 🖥️ Full Node Inventory (28 Systems)
+
+### Proxmox Cluster — 6 Nodes
+
+| Node | IP | Role |
+|------|----|------|
+| BigWorld | 10.10.30.250 | Proxmox VE Hypervisor |
+| Biggie | 10.10.30.192 | Proxmox VE Hypervisor — NOC script host |
+| Snoop | 10.10.30.153 | Proxmox VE Hypervisor |
+| TooShort | 10.10.30.120 | Proxmox VE Hypervisor |
+| Tupac | 10.10.30.74 | Proxmox VE Hypervisor |
+| DrDre | 10.10.30.227 | Proxmox VE Hypervisor |
+
+### K3s Cluster — 12 Nodes
+
+| Role | Node | IP |
+|------|------|----|
+| Control Plane | django-1 | 10.10.30.72 |
+| Control Plane | django-2 | 10.10.30.245 |
+| Control Plane | django-3 | 10.10.30.128 |
+| Ingress Worker | node-1 | 10.10.30.219 |
+| Ingress Worker | node-2 | 10.10.30.134 |
+| Ingress Worker | node-3 | 10.10.30.222 |
+| Data Worker | node-4 | 10.10.30.126 |
+| Data Worker | node-5 | 10.10.30.239 |
+| Data Worker | node-6 | 10.10.30.208 |
+| Monitoring Worker | node-7 | 10.10.30.198 |
+| Monitoring Worker | node-8 | 10.10.30.216 |
+| Monitoring Worker | node-9 | 10.10.30.29 |
+
+### Services, Monitoring & Edge — 10 Systems
+
+| System | IP | Layer | Role |
+|--------|----|-------|------|
+| TrueNAS | 10.10.30.143 | Infrastructure | Network Attached Storage |
+| Nginx Proxy Manager | 10.10.30.210 | Networking | Reverse Proxy |
+| Prometheus | 10.10.30.140 | Monitoring | Metrics Scraping (Active) |
+| Grafana | 10.10.30.68 | Monitoring | Metrics Dashboard |
+| Uptime Kuma | 10.10.30.14 | Monitoring | Service Monitor |
+| Dashy | 10.10.30.61 | Services | HomeLab Dashboard |
+| Home Assistant | 10.10.30.104 | Services | Home Automation |
+| PrimeStation | 10.10.30.233 | Services | Media Server |
+| APRS iGate Home | 10.10.30.129 | Edge | RF to APRS-IS Gateway |
+| APRS iGate Mobile | 10.10.30.35 | Edge | RF Mobile Node |
+
+---
+
 ## 🧭 Documentation
 
 - **How to add a new service via NPM + Cloudflare**  
