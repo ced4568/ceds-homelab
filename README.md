@@ -11,15 +11,17 @@
 
 ## Why I Built This
 
-I work on the Digital Team at GE Aerospace building data pipelines, dashboards, and digital inspection systems. Every day I'm working with production infrastructure where downtime has real consequences — and I needed a lab environment that could keep up with that.
+I work on the Digital Team at GE Aerospace building data pipelines and dashboards for industrial systems.
 
-This isn't a tutorial setup. Every service running here solves a real problem, every VLAN exists for a real reason, and every monitoring alert has a real threshold. I built this the same way I build at work: start with architecture, document as you go, and make it observable from day one.
+But Ced's NOC didn't start there.
 
-**What this lab is for:**
-- Practicing infrastructure patterns I apply directly at GE
-- Building a live, always-on NOC that demonstrates real observability skills
-- Running workloads that would otherwise require expensive cloud resources
-- Documenting systems well enough that anyone can understand them
+It started about five years ago with an old Dell tower I found in the trash, a few cheap upgrades, and way too much curiosity. I didn't even know what a homelab was. I just knew I wanted to see if I could make it do something useful. That server became BigWorld — the primary node that still anchors this cluster today.
+
+What started as a media server and a couple of small VMs went down a rabbit hole and never came back. Five years later it's a 6-node Proxmox cluster, a 12-node Raspberry Pi K3s cluster, a VLAN-segmented network, and a full observability stack running 24/7.
+
+What my work at GE did was change *why* I build the way I do now. When you're working with industrial systems where downtime has real consequences, you stop treating monitoring as optional. You build it first.
+
+The homelab reflects that. If I can't see it, I don't trust it.
 
 ---
 
@@ -31,71 +33,138 @@ graph TB
         CF[Cloudflare Edge]
     end
 
-    subgraph Access Layer
+    subgraph Access["Access Layer"]
         TUNNEL[Cloudflare Tunnel]
         NPM[Nginx Proxy Manager]
     end
 
-    subgraph Network - UniFi UDR
-        MAIN[Main VLAN<br/>10.10.10.0/24]
-        IOT[IoT VLAN<br/>10.10.20.0/24]
-        LAB[HomeLab VLAN<br/>10.10.30.0/24]
-        GUEST[Guest VLAN<br/>10.10.99.0/24]
+    subgraph Network["Network — UniFi UDR"]
+        MAIN[Main VLAN 10.10.10.0/24]
+        IOT[IoT VLAN 10.10.20.0/24]
+        LAB[HomeLab VLAN 10.10.30.0/24]
+        GUEST[Guest VLAN 10.10.99.0/24]
     end
 
-    subgraph Compute - Proxmox VE
-        PVE[Proxmox Hypervisor<br/>VMs + LXC Containers]
-        HA[Home Assistant VM]
-        SERVICES[Service VMs]
+    subgraph Desktop["Primary Workstation"]
+        PS[PrimeStation]
     end
 
-    subgraph Orchestration - K3s
-        CTRL[Control Plane]
-        W1[Worker Node x4]
-        W2[Worker Node x4]
-        W3[Worker Node x4]
+    subgraph Proxmox["Compute — Proxmox Cluster (6 Nodes)"]
+        BW[BigWorld — Primary]
+        BG[Biggie]
+        SN[Snoop]
+        TS[TooShort]
+        TP[Tupac]
+        DD[DrDre]
     end
 
-    subgraph Storage - TrueNAS
-        ZFS[ZFS Pool]
-        NFS[NFS Exports]
-        SMB[SMB Shares]
+    subgraph K3s["Orchestration — K3s Cluster (12 Nodes)"]
+        subgraph CP["Control Plane"]
+            CP1[k3s-django-1]
+            CP2[k3s-django-2]
+            CP3[k3s-django-3]
+        end
+        subgraph INGRESS["Workers — Ingress"]
+            W1[k3s-node-1]
+            W2[k3s-node-2]
+            W3[k3s-node-3]
+        end
+        subgraph DATA["Workers — Data"]
+            W4[k3s-node-4]
+            W5[k3s-node-5]
+            W6[k3s-node-6]
+        end
+        subgraph MON["Workers — Monitoring"]
+            W7[k3s-node-7]
+            W8[k3s-node-8]
+            W9[k3s-node-9]
+        end
     end
 
-    subgraph Observability - Ced's NOC
+    subgraph Storage["Storage — TrueNAS"]
+        TN[TrueNAS]
+    end
+
+    subgraph NOC["Observability — Ced's NOC"]
         PROM[Prometheus]
         GRAF[Grafana]
         KUMA[Uptime Kuma]
-        NODE[Node Exporter]
-        BLACK[Blackbox Exporter]
+        DASHY[Dashy]
+    end
+
+    subgraph Home["Home Automation"]
+        HA[Home Assistant]
     end
 
     CF --> TUNNEL --> NPM
     NPM --> LAB
-    LAB --> PVE
-    LAB --> CTRL
-    PVE --> ZFS
-    ZFS --> NFS --> PVE
-    CTRL --> W1 & W2 & W3
-    NODE --> PROM
-    BLACK --> PROM
+    LAB --> BW
+    BW --- BG & SN & TS & TP & DD
+    BW --> TN
+    TN -->|NFS| BW
+    CP1 --- CP2 & CP3
+    CP1 --> W1 & W2 & W3
+    CP1 --> W4 & W5 & W6
+    CP1 --> W7 & W8 & W9
+    W7 & W8 & W9 --> PROM
     PROM --> GRAF
     KUMA --> GRAF
+    PS --> LAB
+    HA --> IOT
 ```
+
+---
+
+## Node Inventory
+
+### Proxmox Cluster — 6 Nodes
+
+| Node | Role |
+|------|------|
+| BigWorld | Primary Proxmox node — cluster anchor, original lab server |
+| Biggie | Compute node |
+| Snoop | Compute node |
+| TooShort | Compute node |
+| Tupac | Compute node |
+| DrDre | Compute node |
+
+### K3s Cluster — 12 Nodes
+
+| Node | Role |
+|------|------|
+| k3s-django-1 | Control Plane |
+| k3s-django-2 | Control Plane |
+| k3s-django-3 | Control Plane |
+| k3s-node-1 | Worker — Ingress |
+| k3s-node-2 | Worker — Ingress |
+| k3s-node-3 | Worker — Ingress |
+| k3s-node-4 | Worker — Data |
+| k3s-node-5 | Worker — Data |
+| k3s-node-6 | Worker — Data |
+| k3s-node-7 | Worker — Monitoring |
+| k3s-node-8 | Worker — Monitoring |
+| k3s-node-9 | Worker — Monitoring |
+
+### Services
+
+| Service | Role |
+|---------|------|
+| TrueNAS | ZFS storage — NFS for Proxmox, SMB for media |
+| Prometheus | Metrics collection and storage |
+| Grafana | Dashboards and visualization |
+| Uptime Kuma | Service-level uptime monitoring and alerting |
+| Nginx Proxy Manager | Reverse proxy for all internal services |
+| Dashy | Internal service dashboard |
+| Home Assistant | IoT automation — isolated on IoT VLAN |
+| PrimeStation | Primary workstation — HomeLab VLAN |
 
 ---
 
 ## Infrastructure Layers
 
-### Infrastructure Layer — Proxmox VE
+### Infrastructure Layer — Proxmox Cluster
 
-The hypervisor layer runs on a dedicated server hosting all VMs and LXC containers. TrueNAS provides centralized ZFS storage with NFS exports for VM disk images and SMB shares for media workloads.
-
-| Component | Role |
-|-----------|------|
-| Proxmox VE | Primary hypervisor — VMs and LXC containers |
-| TrueNAS | ZFS storage backend — NFS for Proxmox, SMB for media |
-| Home Assistant | IoT automation, isolated on its own VLAN |
+Six-node Proxmox VE cluster anchored by BigWorld — the original server that started this whole lab. TrueNAS provides centralized ZFS storage with NFS exports for VM disk images and SMB shares for media workloads.
 
 📁 Configs: [`proxmox/`](./proxmox/) · [`truenas/`](./truenas/) · [`home-assistant/`](./home-assistant/)
 
@@ -103,14 +172,7 @@ The hypervisor layer runs on a dedicated server hosting all VMs and LXC containe
 
 ### Orchestration Layer — K3s on Raspberry Pi
 
-A 12-node K3s cluster running on Raspberry Pi hardware. Designed to mirror real Kubernetes production patterns at small scale — not just "run some pods."
-
-| Layer | Detail |
-|-------|--------|
-| Cluster size | 12 nodes (Raspberry Pi) |
-| Ingress | MetalLB + NGINX Ingress Controller |
-| DNS | Wildcard `*.cedshomelab.com` via Cloudflare |
-| Workloads | Monitoring stack, containerized services, future GitOps |
+A 12-node K3s cluster running on Raspberry Pi hardware with workers segmented by role — mirroring real Kubernetes production patterns at lab scale. Three dedicated control plane nodes ensure high availability. Worker groups are purpose-built for ingress routing, data workloads, and monitoring collection.
 
 📌 Full cluster documentation: **[ced-k3s-homelab →](https://github.com/ced4568/ced-k3s-homelab)**
 
@@ -118,7 +180,7 @@ A 12-node K3s cluster running on Raspberry Pi hardware. Designed to mirror real 
 
 ### Network & VLAN Architecture
 
-All traffic runs through a UniFi Dream Router with hard VLAN segmentation. The HomeLab VLAN is fully isolated from daily-use devices — the same principle I apply to industrial OT/IT network segmentation at work.
+All traffic runs through a UniFi Dream Router with hard VLAN segmentation. The HomeLab VLAN is fully isolated from daily-use devices — the same network segmentation principle I apply to industrial OT/IT environments at work.
 
 | VLAN | Subnet | Purpose |
 |------|--------|---------|
@@ -140,16 +202,14 @@ Zero open ports. No port forwarding. All external access goes through Cloudflare
 
 ### Observability — Ced's NOC
 
-The centerpiece of this lab. A live Network Operations Center dashboard that gives real-time visibility into every layer of the infrastructure.
-
-**Stack:**
+The centerpiece of this lab. A live Network Operations Center dashboard giving real-time visibility into every layer of the infrastructure.
 
 | Tool | Role |
 |------|------|
 | Prometheus | Metrics collection and storage |
 | Grafana | Dashboards and visualization |
 | Node Exporter | Per-host system metrics (CPU, RAM, disk, network) |
-| Blackbox Exporter | External endpoint/service probing |
+| Blackbox Exporter | External endpoint and service probing |
 | Uptime Kuma | Service-level uptime monitoring and alerting |
 
 **What's monitored:**
@@ -176,7 +236,7 @@ The centerpiece of this lab. A live Network Operations Center dashboard that giv
 ![K3s Nodes](./screenshots/K3s-nodes.png)
 
 ### Nginx Proxy Manager — Reverse Proxy Routes
-![NGM](./screenshots/NGN.png)
+![NPM](./screenshots/NGN.png)
 
 ### Uptime Kuma — Service Monitoring
 ![Uptime Kuma](./screenshots/uptime-kuma.png)
@@ -209,19 +269,21 @@ ceds-homelab/
 
 ## Roadmap
 
-- [x] Proxmox hypervisor with VM/LXC workloads
-- [x] 12-node K3s cluster on Raspberry Pi
-- [x] VLAN segmentation via UniFi
-- [x] Cloudflare Tunnel + Nginx Proxy Manager
+- [x] Proxmox 6-node cluster (BigWorld, Biggie, Snoop, TooShort, Tupac, DrDre)
+- [x] 12-node K3s cluster on Raspberry Pi with role-based worker groups
+- [x] VLAN segmentation via UniFi (Main, IoT, HomeLab, Guest)
+- [x] Cloudflare Tunnel + Nginx Proxy Manager — zero open ports
 - [x] Prometheus + Grafana observability stack
 - [x] Uptime Kuma service monitoring
 - [x] Live NOC dashboard (noc.chasedumphord.com)
+- [x] TrueNAS ZFS storage with NFS exports
+- [x] Home Assistant on isolated IoT VLAN
 - [ ] GitOps with ArgoCD for K3s deployments
 - [ ] Helm chart library for self-hosted services
 - [ ] Cloudflare Zero Trust access policies
 - [ ] Internal container registry
-- [ ] Automated alerting with PagerDuty or Grafana OnCall
-- [ ] Full Proxmox cluster expansion (6-node)
+- [ ] Automated alerting with Grafana OnCall
+- [ ] Full Prometheus alerting rules library
 
 ---
 
@@ -233,6 +295,7 @@ This repository contains **no secrets, tokens, API keys, or passwords.**
 - Template/example files use placeholder values only (`.example` suffix)
 - External access is zero-trust via Cloudflare Tunnel — no exposed ports
 - VLANs enforce hard network segmentation between device classes
+- Internal IPs are intentionally omitted from public documentation
 
 ---
 
