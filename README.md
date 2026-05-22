@@ -1,6 +1,6 @@
 # Ced's HomeLab Live Infrastructure & Observability Platform
 
-> A production-style homelab running real infrastructure, real workloads, and a live NOC dashboard built by a DevOps and Cloud Infrastructure Engineer at GE Aerospace who needed a place to practice what he preaches.
+> A production style homelab running real infrastructure, real workloads, and a live NOC dashboard built by a DevOps and Cloud Infrastructure Engineer at GE Aerospace who needed a place to practice what he preaches.
 
 [![Live NOC](https://img.shields.io/badge/Live%20NOC-noc.chasedumphord.com-1D9E75?style=flat-square)](https://noc.chasedumphord.com)
 [![Portfolio](https://img.shields.io/badge/Portfolio-chasedumphord.com-0F6E56?style=flat-square)](https://chasedumphord.com)
