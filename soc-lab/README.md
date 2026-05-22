@@ -1,6 +1,6 @@
-# 🧠 SOC Lab – Monitoring, Logging & Security Simulation
+# SOC Lab Monitoring, Logging & Security Simulation
 
-## 🚀 Overview
+## Overview
 
 This SOC Lab is a focused project within my homelab environment designed to simulate real-world monitoring, logging, and basic security detection workflows.
 
@@ -8,9 +8,9 @@ The goal is to replicate how modern infrastructure teams observe system behavior
 
 ---
 
-## 🖥️ Infrastructure Backbone
+## Infrastructure Backbone
 
-* Proxmox VE (virtualization platform)
+* 6-node Proxmox VE cluster (virtualization platform)
 * Virtual Machines and LXC containers
 * Segmented network environment (VLANs)
 
@@ -18,7 +18,7 @@ The goal is to replicate how modern infrastructure teams observe system behavior
 
 ---
 
-## ☸️ Kubernetes Environment
+## Kubernetes Environment
 
 * 12-node K3s cluster (Raspberry Pi)
 * Control plane + worker node architecture
@@ -37,7 +37,7 @@ kubectl get pods -A
 
 ---
 
-## 🌐 Traffic & Service Routing
+## Traffic & Service Routing
 
 * Nginx Proxy Manager (reverse proxy)
 * Cloudflare Tunnel (secure external access)
@@ -47,7 +47,7 @@ kubectl get pods -A
 
 ---
 
-## 📊 Monitoring & Observability
+## Monitoring & Observability
 
 * Prometheus (metrics collection)
 * Grafana (dashboard visualization)
@@ -63,7 +63,7 @@ kubectl get pods -A
 
 ---
 
-## 🔐 Security Layer (In Progress)
+## Security Layer (In Progress)
 
 * CrowdSec (intrusion detection & prevention)
 * Basic firewall and access control concepts
@@ -71,7 +71,7 @@ kubectl get pods -A
 
 ---
 
-## 📜 Logging Pipeline (Planned)
+## Logging Pipeline (Planned)
 
 * Grafana Loki (log aggregation)
 * Centralized log visibility
@@ -79,7 +79,7 @@ kubectl get pods -A
 
 ---
 
-## ⚔️ Attack Simulation (Planned)
+## Attack Simulation (Planned)
 
 To validate monitoring and logging systems, the following simulations are planned:
 
@@ -93,17 +93,17 @@ nmap -A <target-ip>
 
 ---
 
-## 🧪 Skills Demonstrated
+## Skills Demonstrated
 
 * Infrastructure design and deployment
 * Kubernetes cluster management
 * Monitoring and observability implementation
 * Reverse proxy and traffic routing
-* System-level thinking and troubleshooting
+* Production systems thinking and operational discipline
 
 ---
 
-## 🎯 Future Enhancements
+## Future Enhancements
 
 * Full logging pipeline (Loki integration)
 * Alerting (Grafana alerts)
@@ -112,6 +112,6 @@ nmap -A <target-ip>
 
 ---
 
-## 💡 Key Takeaway
+## Key Takeaway
 
-This lab demonstrates the ability to design, build, and operate a distributed system with monitoring and observability, reflecting real-world infrastructure and platform engineering practices.
+This lab demonstrates real infrastructure ownership designing, building, and operating a distributed system with full observability stack, security detection, and cloud-native tooling reflecting production-grade platform engineering practices.

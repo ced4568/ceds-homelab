@@ -1,21 +1,21 @@
-# Ced's HomeLab — Live Infrastructure & Observability Platform
+# Ced's HomeLab Live Infrastructure & Observability Platform
 
-> A production-style homelab running real infrastructure, real workloads, and a live NOC dashboard — built by a Digital Systems Engineer at GE Aerospace who needed a place to practice what he preaches.
+> A production-style homelab running real infrastructure, real workloads, and a live NOC dashboard built by a DevOps and Cloud Infrastructure Engineer at GE Aerospace who needed a place to practice what he preaches.
 
 [![Live NOC](https://img.shields.io/badge/Live%20NOC-noc.chasedumphord.com-1D9E75?style=flat-square)](https://noc.chasedumphord.com)
 [![Portfolio](https://img.shields.io/badge/Portfolio-chasedumphord.com-0F6E56?style=flat-square)](https://chasedumphord.com)
-[![Nodes](https://img.shields.io/badge/Nodes-12%20K3s%20%2B%206%20Proxmox-085041?style=flat-square)](#infrastructure-layer)
+[![Nodes](https://img.shields.io/badge/Nodes-18%20Total-085041?style=flat-square)](#infrastructure-layer)
 [![VLANs](https://img.shields.io/badge/VLANs-4%20Segments-1D9E75?style=flat-square)](#network--vlan-architecture)
 
 ---
 
 ## Why I Built This
 
-I work on the Digital Team at GE Aerospace building data pipelines and dashboards for industrial systems.
+I'm a DevOps and Cloud Infrastructure Engineer currently on the Digital Team at GE Aerospace building data pipelines and dashboards for industrial systems.
 
 But Ced's NOC didn't start there.
 
-It started about five years ago with an old Dell tower I found in the trash, a few cheap upgrades, and way too much curiosity. I didn't even know what a homelab was. I just knew I wanted to see if I could make it do something useful. That server became BigWorld — the primary node that still anchors this cluster today.
+It started about five years ago with an old Dell tower I found in the trash, a few cheap upgrades, and way too much curiosity. I didn't even know what a homelab was. I just knew I wanted to see if I could make it do something useful. That server became BigWorld the primary node that still anchors this cluster today.
 
 What started as a media server and a couple of small VMs went down a rabbit hole and never came back. Five years later it's a 6-node Proxmox cluster, a 12-node Raspberry Pi K3s cluster, a VLAN-segmented network, and a full observability stack running 24/7.
 
@@ -38,18 +38,18 @@ graph TB
         NPM[Nginx Proxy Manager]
     end
 
-    subgraph Network["Network — UniFi UDR"]
-        MAIN[Main VLAN 10.10.10.0/24]
-        IOT[IoT VLAN 10.10.20.0/24]
-        LAB[HomeLab VLAN 10.10.30.0/24]
-        GUEST[Guest VLAN 10.10.99.0/24]
+    subgraph Network["Network UniFi UDR"]
+        MAIN[Main VLAN]
+        IOT[IoT VLAN]
+        LAB[HomeLab VLAN]
+        GUEST[Guest VLAN]
     end
 
     subgraph Desktop["Primary Workstation"]
         PS[PrimeStation]
     end
 
-    subgraph Proxmox["Compute — Proxmox Cluster (6 Nodes)"]
+    subgraph Proxmox["Compute Proxmox Cluster (6 Nodes)"]
         BW[BigWorld — Primary]
         BG[Biggie]
         SN[Snoop]
@@ -58,34 +58,34 @@ graph TB
         DD[DrDre]
     end
 
-    subgraph K3s["Orchestration — K3s Cluster (12 Nodes)"]
+    subgraph K3s["Orchestration K3s Cluster (12 Nodes)"]
         subgraph CP["Control Plane"]
             CP1[k3s-django-1]
             CP2[k3s-django-2]
             CP3[k3s-django-3]
         end
-        subgraph INGRESS["Workers — Ingress"]
+        subgraph INGRESS["Workers Ingress"]
             W1[k3s-node-1]
             W2[k3s-node-2]
             W3[k3s-node-3]
         end
-        subgraph DATA["Workers — Data"]
+        subgraph DATA["Workers Data"]
             W4[k3s-node-4]
             W5[k3s-node-5]
             W6[k3s-node-6]
         end
-        subgraph MON["Workers — Monitoring"]
+        subgraph MON["Workers Monitoring"]
             W7[k3s-node-7]
             W8[k3s-node-8]
             W9[k3s-node-9]
         end
     end
 
-    subgraph Storage["Storage — TrueNAS"]
+    subgraph Storage["Storage TrueNAS"]
         TN[TrueNAS]
     end
 
-    subgraph NOC["Observability — Ced's NOC"]
+    subgraph NOC["Observability Ced's NOC"]
         PROM[Prometheus]
         GRAF[Grafana]
         KUMA[Uptime Kuma]
@@ -117,18 +117,18 @@ graph TB
 
 ## Node Inventory
 
-### Proxmox Cluster — 6 Nodes
+### Proxmox Cluster 6 Nodes
 
 | Node | Role |
 |------|------|
-| BigWorld | Primary Proxmox node — cluster anchor, original lab server |
+| BigWorld | Primary Proxmox node cluster anchor, original lab server |
 | Biggie | Compute node |
 | Snoop | Compute node |
 | TooShort | Compute node |
 | Tupac | Compute node |
 | DrDre | Compute node |
 
-### K3s Cluster — 12 Nodes
+### K3s Cluster 12 Nodes
 
 | Node | Role |
 |------|------|
@@ -162,32 +162,32 @@ graph TB
 
 ## Infrastructure Layers
 
-### Infrastructure Layer — Proxmox Cluster
+### Infrastructure Layer Proxmox Cluster
 
-Six-node Proxmox VE cluster anchored by BigWorld — the original server that started this whole lab. TrueNAS provides centralized ZFS storage with NFS exports for VM disk images and SMB shares for media workloads.
+Six-node Proxmox VE cluster anchored by BigWorld the original server that started this whole lab. TrueNAS provides centralized ZFS storage with NFS exports for VM disk images and SMB shares for media workloads.
 
-📁 Configs: [`proxmox/`](./proxmox/) · [`truenas/`](./truenas/) · [`home-assistant/`](./home-assistant/)
+Configs: [`proxmox/`](./proxmox/) · [`truenas/`](./truenas/) · [`home-assistant/`](./home-assistant/)
 
 ---
 
-### Orchestration Layer — K3s on Raspberry Pi
+### Orchestration Layer K3s on Raspberry Pi
 
-A 12-node K3s cluster running on Raspberry Pi hardware with workers segmented by role — mirroring real Kubernetes production patterns at lab scale. Three dedicated control plane nodes ensure high availability. Worker groups are purpose-built for ingress routing, data workloads, and monitoring collection.
+A 12-node K3s cluster running on Raspberry Pi hardware with workers segmented by role mirroring real Kubernetes production patterns at lab scale. Three dedicated control plane nodes ensure high availability. Worker groups are purpose built for ingress routing, data workloads, and monitoring collection.
 
-📌 Full cluster documentation: **[ced-k3s-homelab →](https://github.com/ced4568/ced-k3s-homelab)**
+Full cluster documentation: **[ced-k3s-homelab →](https://github.com/ced4568/ced-k3s-homelab)**
 
 ---
 
 ### Network & VLAN Architecture
 
-All traffic runs through a UniFi Dream Router with hard VLAN segmentation. The HomeLab VLAN is fully isolated from daily-use devices — the same network segmentation principle I apply to industrial OT/IT environments at work.
+All traffic runs through a UniFi Dream Router with hard VLAN segmentation. The HomeLab VLAN is fully isolated from daily-use devices the same network segmentation principle I apply to industrial OT/IT environments at work.
 
-| VLAN | Subnet | Purpose |
-|------|--------|---------|
-| Main | `10.10.10.0/24` | Daily-use devices, workstations |
-| IoT | `10.10.20.0/24` | Smart home devices, consoles, TVs |
-| HomeLab | `10.10.30.0/24` | All servers, K3s nodes, storage, services |
-| Guest | `10.10.99.0/24` | Guest Wi-Fi — no internal access |
+| VLAN | Purpose |
+|------|---------|
+| Main | Daily-use devices, workstations |
+| IoT | Smart home devices, consoles, TVs |
+| HomeLab | All servers, K3s nodes, storage, services |
+| Guest | Guest Wi-Fi — no internal access |
 
 **Traffic flow for external access:**
 ```
@@ -196,11 +196,11 @@ Internet → Cloudflare Edge → Tunnel → Nginx Proxy Manager → Internal Ser
 
 Zero open ports. No port forwarding. All external access goes through Cloudflare Tunnel.
 
-📁 Configs: [`cloudflare/`](./cloudflare/) · [`npm/`](./npm/) · [`docs/Add_New_Service_Guide.md`](./docs/Add_New_Service_Guide.md)
+Configs: [`cloudflare/`](./cloudflare/) · [`npm/`](./npm/) · [`docs/Add_New_Service_Guide.md`](./docs/Add_New_Service_Guide.md)
 
 ---
 
-### Observability — Ced's NOC
+### Observability Ced's NOC
 
 The centerpiece of this lab. A live Network Operations Center dashboard giving real-time visibility into every layer of the infrastructure.
 
@@ -219,8 +219,8 @@ The centerpiece of this lab. A live Network Operations Center dashboard giving r
 - Network latency across VLANs
 - TrueNAS pool health and disk utilization
 
-📺 **[View Live NOC Dashboard →](https://noc.chasedumphord.com)**
-📁 Configs: [`monitoring/`](./monitoring/)
+**[View Live NOC Dashboard →](https://noc.chasedumphord.com)**
+Configs: [`monitoring/`](./monitoring/)
 
 ---
 
@@ -292,10 +292,10 @@ ceds-homelab/
 This repository contains **no secrets, tokens, API keys, or passwords.**
 
 - All sensitive values are stored locally or passed via environment variables
-- Template/example files use placeholder values only (`.example` suffix)
-- External access is zero-trust via Cloudflare Tunnel — no exposed ports
+- Template/example files use placeholder values only (.example suffix)
+- External access is zero-trust via Cloudflare Tunnel no exposed ports
 - VLANs enforce hard network segmentation between device classes
-- Internal IPs are intentionally omitted from public documentation
+- Internal IPs and subnet ranges are intentionally omitted from public documentation
 
 ---
 
@@ -303,8 +303,8 @@ This repository contains **no secrets, tokens, API keys, or passwords.**
 
 | Project | Description |
 |---------|-------------|
-| [ced-k3s-homelab](https://github.com/ced4568/ced-k3s-homelab) | Full documentation for the 12-node Raspberry Pi K3s cluster |
-| [ceds-aprs-igate](https://github.com/ced4568/ceds-aprs-igate) | Dual-node APRS RF-to-internet iGate (KJ5JCO) |
+| [ced-k3s-homelab](https://github.com/ced4568/ced-k3s-homelab) | Full documentation for the 12 node Raspberry Pi K3s cluster |
+| [ceds-aprs-igate](https://github.com/ced4568/ceds-aprs-igate) | Dual-node APRS RF to internet iGate (KJ5JCO) |
 | [ced-portfolio](https://github.com/ced4568/ced-portfolio) | Source for chasedumphord.com |
 
 ---
@@ -312,7 +312,7 @@ This repository contains **no secrets, tokens, API keys, or passwords.**
 ## Author
 
 **Chase Dumphord (Ced)**
-Digital Systems Engineer · GE Aerospace · Oxford, MS
+DevOps and Cloud Infrastructure Engineer · GE Aerospace · Oxford, MS
 
 Building systems that connect industrial hardware to actionable data.
 
