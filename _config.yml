@@ -1,0 +1,3 @@
+theme: minima
+title: "Ced's HomeLab"
+description: "Production-style homelab running real infrastructure, real workloads, and a live NOC dashboard."
