@@ -1,3 +1,16 @@
+# =============================================================
+# FILE: _config.yml
+# PURPOSE: Jekyll site configuration. GitHub Pages reads this
+#          file to build and theme the static site from markdown.
+# =============================================================
+
+# SECTION: Theme
+# Tells Jekyll which gem-based theme to use for layouts and styles.
+# "minima" is the GitHub Pages default — clean, responsive, no setup needed.
+# It also auto-injects _includes/head-custom.html into every page <head>.
 theme: minima
+
+# SECTION: Site Identity
+# Used in the browser tab title, SEO meta tags, and the site header.
 title: "Ced's HomeLab"
 description: "Production-style homelab running real infrastructure, real workloads, and a live NOC dashboard."

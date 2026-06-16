@@ -1,15 +1,45 @@
-<!-- Matomo -->
+<!-- =============================================================
+     FILE: _includes/head-custom.html
+     PURPOSE: Injected into the <head> of every page by the Jekyll
+              minima theme. Anything added here loads site-wide.
+     ============================================================= -->
+
+<!-- SECTION: Matomo Analytics
+     What it does: Tracks page views and link clicks across the site.
+     Why it's here: Jekyll's minima theme auto-includes this file in
+     <head>, so every page gets tracking without editing each layout.
+     Tracker endpoint: analytics.synthossystems.com
+     Site ID: 1 (configured inside Matomo dashboard)
+-->
 <script>
+  /* --- STEP 1: Initialize the command queue ---
+     _paq holds analytics commands before the Matomo script loads.
+     Commands pushed here are replayed once matomo.js is fetched. */
   var _paq = window._paq = window._paq || [];
-  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+
+  /* --- STEP 2: Queue core tracking commands ---
+     trackPageView  → records this page as a visit
+     enableLinkTracking → tracks outbound link clicks automatically */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
+
+  /* --- STEP 3: Load the Matomo script asynchronously ---
+     Wrapped in an IIFE so local variables (u, d, g, s) don't
+     pollute the global scope. The script tag is inserted before
+     the first existing <script> tag for fastest possible load. */
   (function() {
+    /* Base URL of the self-hosted Matomo instance */
     var u="//analytics.synthossystems.com/";
+
+    /* Tell Matomo where to send tracking data */
     _paq.push(['setTrackerUrl', u+'matomo.php']);
+
+    /* Identify which Matomo site these hits belong to */
     _paq.push(['setSiteId', '1']);
+
+    /* Dynamically inject matomo.js without blocking page render */
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<!-- End Matomo Code -->
+<!-- END SECTION: Matomo Analytics -->
